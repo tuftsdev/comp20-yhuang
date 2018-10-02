@@ -1,0 +1,45 @@
+/*css file for responsive design*/
+
+@media screen and (min-width: 1201px){
+	.software{
+		width: 434px;
+		height: 580px;
+		background: url("software.png") left 0px top 0px; 
+	}
+
+}
+
+@media screen and (max-width: 1200px) and (min-width: 1001px){
+	.software{
+		width: 430px;
+		height: 580px;
+		background: url("software.png") left -434px top 0px; 
+	}
+
+}
+
+@media screen and (max-width: 1000px) and (min-width: 801px){
+		.software{
+		width: 340px;
+		height: 580px;
+		background: url("software.png") left -864px top 0px; 
+	}
+
+}
+
+@media screen and (max-width: 800px) and (min-width: 601px){
+		.software{
+		width: 717px;
+		height: 631px;
+		background: url("software.png") left 0px top -580px; 
+	}
+
+}
+
+@media screen and (max-width:600px){
+		.software{
+		width: 487px;
+		height: 631px;
+		background: url("software.png") left -717px top -580px; 
+	}
+}
