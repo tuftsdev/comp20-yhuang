@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>We Do</title>
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+
+<body>
+
+<h1 id="title">We Do</h1>
+
+<video src="https://www.cs.tufts.edu/comp/20/wedo.mp4" id="wedo" controls></video>
+<div id="lyrics"></div>
+
+<script>
+	var vid = document.getElementById("wedo");
+	var lyr = document.getElementById("lyrics");
+	var newlyr = document.createElement("p");
+   	var node = document.createTextNode("Who controls the British crown?");
+	newlyr.appendChild(node);
+
+	
+	vid.addEventListener("timeupdate", function(){
+
+		if(vid.currentTime >= 4){
+			lyr.appendChild(newlyr);
+		}
+
+
+		if(vid.currentTime >= 6){
+			newlyr.innerHTML = "Who keeps the metric system down?";
+		}
+
+		if (vid.currentTime >= 8){
+			newlyr.innerHTML = "We do, we do!";
+		}
+
+		if (vid.currentTime >= 13){
+			newlyr.innerHTML = "Who keeps Atlantis off the maps?";
+		}
+
+		if (vid.currentTime >= 15){
+			newlyr.innerHTML = "Who keeps the Martians under wraps?";
+		}
+
+		if (vid.currentTime >= 17){
+			newlyr.innerHTML = "We do, we do!";
+		}
+
+		if (vid.currentTime >= 21){
+			newlyr.innerHTML = "Who holds back the electric car?";
+		}
+
+		if (vid.currentTime >= 25){
+			newlyr.innerHTML = "Who makes Steve Guttenberg a star?";
+		}
+
+		if (vid.currentTime >= 29){
+			newlyr.innerHTML = "We do, we do!";
+		}
+
+		if (vid.currentTime >= 33){
+			newlyr.innerHTML = "Who robs cavefish of their sight?";
+		}
+
+		if (vid.currentTime >= 35){
+			newlyr.innerHTML = "Who rigs every Oscar night?";
+		}	
+
+
+		if (vid.currentTime >= 38){
+			newlyr.innerHTML = "We do！";
+		}	
+
+		if (vid.currentTime >= 41){
+			newlyr.innerHTML = "We do！";
+		}					
+
+	});
+
+
+</script>
+</body>
+</html>	

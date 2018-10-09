@@ -1,0 +1,30 @@
+body{
+	background-color: white;
+	font-family:"Tahoma";
+	font-size:20px;
+}
+
+h1{
+	font-size:60px;
+	position: absolute;
+	left: 45%;
+	top: 38%;
+	font-family:"Tahoma";
+	font-weight:bold;
+}
+
+video{
+	margin-left: 4%;
+	margin-top: 10%;
+}
+
+
+#lyrics{
+	background-color:#ff66cc;
+	padding-left: 1%;
+	padding-right: 1%;
+	font-style:italic;
+	position:absolute;
+	right:4%;
+	top: 45%
+}
