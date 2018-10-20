@@ -133,7 +133,9 @@ function init()
 	//draw the polylines that connect each station
 	drawline();
 
-	//display the user's location on the map and center the map at user's location
+	//display the user's location on the map
+	//center the map at user's location
+	//find the closest station
 	mylocation();
 
 }
@@ -184,7 +186,7 @@ function drawline()
 
 		var theline = new google.maps.Polyline({
 			path: coordinates,
-			strokecolor: '#000000',
+			strokeColor: '#000000',
 			strokeOpacity: 1.0,
           	strokeWeight: 2
 		});
@@ -204,7 +206,7 @@ function drawline()
 
 	var addline = new google.maps.Polyline({
 		path: addition,
-		strokecolor: '#000000',
+		strokeColor: '#000000',
 		strokeOpacity: 1.0,
         strokeWeight: 2
 	});
@@ -259,7 +261,6 @@ function getclosest()
 {
 	stationloc = new google.maps.LatLng(slat[0], slon[0]);
 	min = google.maps.geometry.spherical.computeDistanceBetween(myloc, stationloc);
-	console.log("initial distance is " + min)
 
 	for (var i = 1; i < station.length; i++)
 	{
@@ -269,12 +270,28 @@ function getclosest()
 		{
 			min = newdis;
 			closeststation = station[i].name;
+			cslat = slat[i];
+			cslon = slon[i];
 		}
 	}
 
 	//meter-to-mile conversion
 	min *= 0.000621371;
 	min = min.toFixed(2);
+
+	var mystation = [
+		{lat: mylat, lng: mylon}, 
+		{lat: cslat, lng: cslon}
+	];	
+
+	var myline = new google.maps.Polyline({
+		path: mystation,
+		strokeColor: '#FF0000',
+		strokeOpacity: 1.0,
+        strokeWeight: 2
+	});
+
+	myline.setMap(themap);
 }	
 
 
