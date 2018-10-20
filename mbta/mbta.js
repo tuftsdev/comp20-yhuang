@@ -133,6 +133,9 @@ function init()
 	//draw the polylines that connect each station
 	drawline();
 
+	//display the user's location on the map and center the map at user's location
+	mylocation();
+
 }
 
 function displaystations()
@@ -171,7 +174,6 @@ function displaystations()
 
 function drawline()
 {
-	console.log(slat[0]);
 	for (var i = 0; i < station.length - 1; i++)
 	{	
 		var j = i + 1;
@@ -208,11 +210,67 @@ function drawline()
 	});
 
 	addline.setMap(themap);
+}
 
+
+//get the location of user
+function mylocation()
+{
+	if (navigator.geolocation) 
+	{ 
+		navigator.geolocation.getCurrentPosition(function(position) {
+			mylat = position.coords.latitude;
+			mylon = position.coords.longitude;
+
+			//update the map according to my location
+			updatemap();
+		});
+	}
+	else 
+	{
+		alert("Your web browser does not support geolocation.");
+	}
 
 }
 
-		
+function updatemap()
+{
+	myloc = new google.maps.LatLng(mylat, mylon);
+	themap.panTo(myloc);
+
+	//calulate the distance between user and the closest station
+	getclosest();
+
+	mymarker = new google.maps.Marker({
+		position: myloc,
+		title: "the closest station:" + closeststation + "is" + distance + "from you."
+		});
+
+	mymarker.setMap(themap);
+
+	google.maps.event.addListener(mymarker, 'click', function() {
+				newwindow.setContent(mymarker.title);
+				newwindow.open(themap, mymarker);
+	});
+}
+
+
+function getclosest()
+{
+	stationloc = new google.maps.LatLng(slat[0], slon[0]);
+	min = google.maps.geometry.spherical.computeDistanceBetween(myloc, stationloc);
+
+	for (var i = 1; i < station.length; i++)
+	{
+		stationloc = new google.maps.LatLng(slat[0], slon[0]);
+		newdis = google.maps.geometry.spherical.computeDistanceBetween(myloc, stationloc);
+
+		if (newdis < min)
+		{
+			min = newdis;
+		}
+	}
+}	
 
 
 
