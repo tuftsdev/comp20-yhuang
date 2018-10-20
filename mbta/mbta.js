@@ -243,7 +243,7 @@ function updatemap()
 
 	mymarker = new google.maps.Marker({
 		position: myloc,
-		title: "the closest station:" + closeststation + "is" + distance + "from you."
+		title: "The closest station, " + closeststation + ", is approximately " + min + " miles from you."
 		});
 
 	mymarker.setMap(themap);
@@ -259,17 +259,22 @@ function getclosest()
 {
 	stationloc = new google.maps.LatLng(slat[0], slon[0]);
 	min = google.maps.geometry.spherical.computeDistanceBetween(myloc, stationloc);
+	console.log("initial distance is " + min)
 
 	for (var i = 1; i < station.length; i++)
 	{
-		stationloc = new google.maps.LatLng(slat[0], slon[0]);
+		stationloc = new google.maps.LatLng(slat[i], slon[i]);
 		newdis = google.maps.geometry.spherical.computeDistanceBetween(myloc, stationloc);
-
 		if (newdis < min)
 		{
 			min = newdis;
+			closeststation = station[i].name;
 		}
 	}
+
+	//meter-to-mile conversion
+	min *= 0.000621371;
+	min = min.toFixed(2);
 }	
 
 
