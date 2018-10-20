@@ -1,34 +1,5 @@
 function init()
-{		
-	// set the South station as the landmark
-	var landmark = new google.maps.LatLng(42.352035, -71.055182);
-			
-	// Set up map
-	var myOptions = {
-		zoom: 13, 
-		center: landmark,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
-		};
-
-	
-	// Create the map
-	var themap = new google.maps.Map(document.getElementById("map"), myOptions);
-	
-	// Create a marker				
-	var marker = new google.maps.Marker({
-		position: landmark,
-		title: "South Station, Boston, MA"
-		});
-	marker.setMap(themap);
-				
-	// Create a global info window that opens onclick
-	var infowindow = new google.maps.InfoWindow();
-
-	google.maps.event.addListener(marker, 'click', function() {
-		infowindow.setContent(marker.title);
-		infowindow.open(themap, marker);
-		});
-
+{			
 	//set up station list with objects
 	var station = [
 	{
@@ -144,42 +115,61 @@ function init()
 
 	}];
 
-	displaystations(station, themap);
 
+	var landmark = new google.maps.LatLng(42.352271, -71.05524200000001);
+			
+	// Set up map
+	var myOptions = {
+		zoom: 13, 
+		center: landmark,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+
+	var themap = new google.maps.Map(document.getElementById("map"), myOptions);
+
+
+
+	displaystations(station, themap);
 
 }
 
 function displaystations(station, themap)
 {
 
-	var slat = new Array();
-	var slon = new Array();
-	var sid = new Array();
+	slat = new Array();
+	slon = new Array();
+	sid = new Array();
+	newwindow = new google.maps.InfoWindow();
 	
 	for (var i = 0; i < station.length; i++)
 	{
-
 		slat.push(station[i].lat);
 		slon.push(station[i].lon);
 		sid.push(station[i].id);
 
-		if(i != 0)
-		{
-			var newmark = new google.maps.LatLng(slat[i], slon[i]);
-			var newmarker = new google.maps.Marker({
+		var newmark = new google.maps.LatLng(slat[i], slon[i]);
+		var newmarker = new google.maps.Marker({
 			position: newmark,
-			title: "station[i]" + ", Boston, MA"
-			});
-			newmarker.setMap(themap);
+			icon:{
+			url: "metro.png",
+			scaledSize: new google.maps.Size(25, 25)
+			}});
+	
+		newmarker.setMap(themap);
 
-			var newwindow = new google.maps.InfoWindow();
-
-			google.maps.event.addListener(newmarker, 'click', function() {
-				newinfowindow.setContent(newmarker.title);
-				newinfowindow.open(themap, marker);
-			});
-		}
+		google.maps.event.addListener(newmarker, 'click', function(newmarker, i) {
+			return function(){
+			newwindow.setContent(station[i].name + ", Boston, MA");
+			newwindow.open(themap, newmarker);
+			}
+		}(newmarker,i));
 
 	}
-
 }
+
+
+
+		
+
+
+
