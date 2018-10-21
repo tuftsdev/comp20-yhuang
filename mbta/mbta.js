@@ -196,6 +196,7 @@ function getschedule(i)
 			scount = 0;
 			for(i = 0; i < schedule.data.length; i++)
 			{
+				//if the train is going northbound
 				if(schedule.data[i].attributes.direction_id == 1){
 					if(schedule.data[i].attributes.arrival_time != null)
 					{
@@ -204,6 +205,7 @@ function getschedule(i)
 					}
 				}
 
+				//if the train is going southbound
 				else{
 						if(schedule.data[i].attributes.arrival_time != null)
 						{
@@ -215,6 +217,7 @@ function getschedule(i)
 
 			}
 
+		
 			if(ncount == 0)
 				{
 					tonorth += "No upcoming train available."
