@@ -154,7 +154,7 @@ function displaystations()
 		slon.push(station[i].lon);
 		sid.push(station[i].id);
 
-		message = "";
+		message = "<h3>" + station[i].name + " Boston, MA" + "</h3>" + "\n";
 
 		var newmark = new google.maps.LatLng(slat[i], slon[i]);
 		var newmarker = new google.maps.Marker({
@@ -170,12 +170,23 @@ function displaystations()
 
 		google.maps.event.addListener(newmarker, 'click', function(newmarker, i) {
 			return function(){
-			getschedule(i);
-			newwindow.open(themap, newmarker);
+
+			if(!isInfoWindowOpen(newwindow))
+			{
+				getschedule(i);
+				newwindow.open(themap, newmarker);
+			}
 			}
 		}(newmarker,i));
 
 	}
+}
+
+//check if the infowindow is already opened, aka the content is displayed
+function isInfoWindowOpen(infoWindow){
+    var mymap = infoWindow.getMap();
+    console.log(mymap);
+    return (mymap !== null && typeof mymap !== "undefined");
 }
 
 //return the schedule for the station 
@@ -229,7 +240,7 @@ function getschedule(i)
 				}	
 				
 
-			message = tonorth + "</ul>" + tosouth + "</ul>";
+			message += tonorth + "</ul>" + tosouth + "</ul>";
 			
 			newwindow.setContent(message);		
 		}
