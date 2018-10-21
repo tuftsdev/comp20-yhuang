@@ -112,7 +112,7 @@ station = [
 	}
 ];
 
-function init()
+function initMap()
 {		
 	// Set up the map	
 
@@ -154,24 +154,93 @@ function displaystations()
 		slon.push(station[i].lon);
 		sid.push(station[i].id);
 
+		message = "";
+
 		var newmark = new google.maps.LatLng(slat[i], slon[i]);
 		var newmarker = new google.maps.Marker({
 			position: newmark,
+			title: message,		
 			icon:{
 			url: "metro.png",
 			scaledSize: new google.maps.Size(25, 25)
-			}});
+			}},	
+		);
 	
 		newmarker.setMap(themap);
 
 		google.maps.event.addListener(newmarker, 'click', function(newmarker, i) {
 			return function(){
-			newwindow.setContent(station[i].name + ", Boston, MA");
+			getschedule(i);
 			newwindow.open(themap, newmarker);
 			}
 		}(newmarker,i));
 
 	}
+}
+
+//return the schedule for the station 
+function getschedule(i)
+{
+	request = new XMLHttpRequest();
+	request.open("GET", "https://chicken-of-the-sea.herokuapp.com/redline/schedule.json?stop_id=" + sid[i], true);
+
+	console.log(message);
+
+	tonorth = "The upcoming trains to Alewife: " + "<ul>";
+	tosouth = "The upcoming trains to Ashmont/Braintree: " + "<ul>";
+
+	request.onreadystatechange = function(){
+		if(request.readyState == 4 && request.status == 200)
+		{
+			thedata = request.responseText;
+			schedule = JSON.parse(thedata);
+			ncount = 0;
+			scount = 0;
+			for(i = 0; i < schedule.data.length; i++)
+			{
+				if(schedule.data[i].attributes.direction_id == 1){
+					if(schedule.data[i].attributes.arrival_time != null)
+					{
+						tonorth += "<li>" + schedule.data[i].attributes.arrival_time;
+						ncount++;
+					}
+				}
+
+				else{
+						if(schedule.data[i].attributes.arrival_time != null)
+						{
+							tosouth += "<li>" + schedule.data[i].attributes.arrival_time;
+							scount++;
+						}
+
+				}
+
+			}
+
+			if(ncount == 0)
+				{
+					tonorth += "No upcoming train available."
+				}
+
+			if(scount == 0)
+				{
+					tosouth += "No upcoming train available."
+				}	
+				
+
+			message = tonorth + "</ul>" + tosouth + "</ul>";
+			
+			newwindow.setContent(message);		
+		}
+
+		else if(request.status != 200)
+		{
+			console.log("the request cannot be made", request.status);
+		}
+	}
+
+	request.send();
+
 }
 
 function drawline()
