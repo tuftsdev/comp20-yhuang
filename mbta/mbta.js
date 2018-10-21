@@ -147,14 +147,14 @@ function displaystations()
 	slon = new Array();
 	sid = new Array();
 	newwindow = new google.maps.InfoWindow();
+
+	message = "";
 	
 	for (var i = 0; i < station.length; i++)
 	{
 		slat.push(station[i].lat);
 		slon.push(station[i].lon);
 		sid.push(station[i].id);
-
-		message = "";
 
 		var newmark = new google.maps.LatLng(slat[i], slon[i]);
 		var newmarker = new google.maps.Marker({
@@ -195,6 +195,7 @@ function getschedule(i)
 			schedule = JSON.parse(thedata);
 			ncount = 0;
 			scount = 0;
+			console.log(schedule.data.length);
 			for(i = 0; i < schedule.data.length; i++)
 			{
 				//if the train is going northbound
