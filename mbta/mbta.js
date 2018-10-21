@@ -154,7 +154,7 @@ function displaystations()
 		slon.push(station[i].lon);
 		sid.push(station[i].id);
 
-		message = "<h3>" + station[i].name + " Boston, MA" + "</h3>" + "\n";
+		message = "";
 
 		var newmark = new google.maps.LatLng(slat[i], slon[i]);
 		var newmarker = new google.maps.Marker({
@@ -170,23 +170,12 @@ function displaystations()
 
 		google.maps.event.addListener(newmarker, 'click', function(newmarker, i) {
 			return function(){
-
-			if(!isInfoWindowOpen(newwindow))
-			{
-				getschedule(i);
-				newwindow.open(themap, newmarker);
-			}
+			getschedule(i);
+			newwindow.open(themap, newmarker);
 			}
 		}(newmarker,i));
 
 	}
-}
-
-//check if the infowindow is already opened, aka the content is displayed
-function isInfoWindowOpen(infoWindow){
-    var mymap = infoWindow.getMap();
-    console.log(mymap);
-    return (mymap !== null && typeof mymap !== "undefined");
 }
 
 //return the schedule for the station 
@@ -197,6 +186,7 @@ function getschedule(i)
 
 	tonorth = "The upcoming trains to Alewife: " + "<ul>";
 	tosouth = "The upcoming trains to Ashmont/Braintree: " + "<ul>";
+	basic = "<h4>" + station[i].name + " Boston, MA" + "</h4>" + "\n";
 
 	request.onreadystatechange = function(){
 		if(request.readyState == 4 && request.status == 200)
@@ -240,7 +230,7 @@ function getschedule(i)
 				}	
 				
 
-			message += tonorth + "</ul>" + tosouth + "</ul>";
+			message = basic + tonorth + "</ul>" + tosouth + "</ul>";
 			
 			newwindow.setContent(message);		
 		}
