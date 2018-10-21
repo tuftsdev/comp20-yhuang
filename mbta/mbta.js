@@ -184,8 +184,6 @@ function getschedule(i)
 	request = new XMLHttpRequest();
 	request.open("GET", "https://chicken-of-the-sea.herokuapp.com/redline/schedule.json?stop_id=" + sid[i], true);
 
-	console.log(message);
-
 	tonorth = "The upcoming trains to Alewife: " + "<ul>";
 	tosouth = "The upcoming trains to Ashmont/Braintree: " + "<ul>";
 
@@ -235,7 +233,7 @@ function getschedule(i)
 
 		else if(request.status != 200)
 		{
-			console.log("the request cannot be made", request.status);
+			alert("Unable to load the schedule.");
 		}
 	}
 
