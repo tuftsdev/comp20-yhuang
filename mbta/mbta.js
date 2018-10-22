@@ -256,7 +256,7 @@ function drawline()
 
 		var theline = new google.maps.Polyline({
 			path: coordinates,
-			strokeColor: '#000000',
+			strokeColor: '#FF0000',
 			strokeOpacity: 1.0,
           	strokeWeight: 2
 		});
@@ -276,7 +276,7 @@ function drawline()
 
 	var addline = new google.maps.Polyline({
 		path: addition,
-		strokeColor: '#000000',
+		strokeColor: '#FF0000',
 		strokeOpacity: 1.0,
         strokeWeight: 2
 	});
@@ -356,7 +356,7 @@ function getclosest()
 
 	var myline = new google.maps.Polyline({
 		path: mystation,
-		strokeColor: '#FF0000',
+		strokeColor: '#000000',
 		strokeOpacity: 1.0,
         strokeWeight: 2
 	});
