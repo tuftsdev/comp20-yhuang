@@ -182,10 +182,10 @@ function displaystations()
 function getschedule(i)
 {
 	request = new XMLHttpRequest();
-	request.open("GET", "https://chicken-of-the-sea.herokuapp.com/redline/schedule.json?stop_id=" + sid[i], true);
+	request.open("GET", "https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=" + sid[i]+ "&page[limit]=10&page[offset]=0&sort=departure_time&api_key=77d1157c4d5d4c508d3979b63a9fcf51", true);
 
-	tonorth = "The upcoming trains to Alewife: " + "<ul>";
-	tosouth = "The upcoming trains to Ashmont/Braintree: " + "<ul>";
+	tonorth = "Upcoming trains to Alewife: " + "<ul>";
+	tosouth = "Upcoming trains to Ashmont/Braintree: " + "<ul>";
 	basic = "<h4>" + station[i].name + " Boston, MA" + "</h4>" + "\n";
 
 	request.onreadystatechange = function(){
@@ -195,7 +195,7 @@ function getschedule(i)
 			schedule = JSON.parse(thedata);
 			ncount = 0;
 			scount = 0;
-			for(i = 0; i < schedule.data.length; i++)
+			for(var i = 0; i < schedule.data.length; i++)
 			{
 				//if the train is going northbound
 				if(schedule.data[i].attributes.direction_id == 1){
@@ -213,7 +213,6 @@ function getschedule(i)
 							tosouth += "<li>" + schedule.data[i].attributes.arrival_time;
 							scount++;
 						}
-
 				}
 
 			}
@@ -227,12 +226,13 @@ function getschedule(i)
 			if(scount == 0)
 				{
 					tosouth += "No upcoming train available."
-				}	
+				}
 				
 
 			message = basic + tonorth + "</ul>" + tosouth + "</ul>";
 			
 			newwindow.setContent(message);		
+			
 		}
 
 		else if(request.status != 200)
