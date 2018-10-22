@@ -201,7 +201,7 @@ function getschedule(i)
 				if(schedule.data[i].attributes.direction_id == 1){
 					if(schedule.data[i].attributes.arrival_time != null)
 					{
-						tonorth += "<li>" + schedule.data[i].attributes.arrival_time;
+						tonorth += "<li>" + schedule.data[i].attributes.arrival_time.substring(11,19);
 						ncount++;
 					}
 				}
@@ -210,13 +210,12 @@ function getschedule(i)
 				else{
 						if(schedule.data[i].attributes.arrival_time != null)
 						{
-							tosouth += "<li>" + schedule.data[i].attributes.arrival_time;
+							tosouth += "<li>" + schedule.data[i].attributes.arrival_time.substring(11,19);
 							scount++;
 						}
 				}
 
 			}
-
 		
 			if(ncount == 0)
 				{
