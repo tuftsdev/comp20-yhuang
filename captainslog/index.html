@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Captain's Log</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        // Your work will be done here...
+        $(document).ready(function(){
+            $("#msg").keypress(function(pressed){
+                if(pressed.which == 13)
+                {
+                    input = $("#msg").val(); 
+                    time = new Date();
+                    tostore = "<p>" + time + " - " + input + "</p>";
+                    localStorage[new Date().getTime()] = tostore;
+                    output = "";
+
+                    for (var i = localStorage.length - 1; i >= 0; i--) 
+                    {
+                        output += localStorage.getItem(localStorage.key(i)) + "\n";        
+                    }
+                    
+                    console.log("now updated" + output);    
+                    $("#log").html(output);                   
+                }
+
+            })
+        })
+    </script>
+</head>
+
+<body>
+    <h1>Captain's Log</h1>
+    <h3>New entry: <input type="text" id="msg" name="msg" size="30" /></h3>
+    <div id="log"></div>
+</body>
+</html>
