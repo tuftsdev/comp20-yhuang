@@ -23,6 +23,7 @@ GameManager.prototype.restart = function () {
 
       var name = prompt("What is your name?");
 
+      if (name != null && this.actuator.score != null && newgrid != null){
       $.ajax({
         url: 'https://agile-scrubland-25052.herokuapp.com/submit',
         type: 'POST',
@@ -35,13 +36,14 @@ GameManager.prototype.restart = function () {
         success:function(response) {
           var records = JSON.parse(response);
           var popup = "TOP TEN: \n";
+          
           records.forEach(function(currElement, index) {
-          popup += currElement.score + '\n';
-        });
+          popup += "Username: "+ currElement.username + " Score: " + currElement.score + " Date: " + currElement.created_at + "\n";
+          });         
 
-          alert(popup);
-
-      }});
+          alert(popup);}
+      });
+    }
 };
 
 // Keep playing after winning (allows going over 2048)
