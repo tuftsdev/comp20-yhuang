@@ -1,0 +1,195 @@
+<!--a resume document-->
+<!doctype html>
+<html lang="en">
+
+<head>
+	<title>Security Report</title>
+	<meta charset="utf-8" />
+	<link href="index.css" rel="stylesheet" />
+</head>
+
+<body>
+	<h1>Security Report for calm-sea-43952</h1>
+	<div class = "privacy">by Yishu Huang, Dec. 2nd</div>
+
+	<h3>INTRODUCTION</h3>
+	<div>
+		<p class="subpoint"> 
+			&nbsp&nbsp&nbsp&nbspBetween November 30 and December 3, a security examination that consisted of web application focused assessment  of the calm-sea-43952 heroku application has been performed. calm-sea-43952 is a server-side web application developed using Heroku, Node.js and the Express framework. It stores the submitted player information of the game, 2048, from any sources in Mongo database and returns corresponding data when requested.
+
+			<br><br>&nbsp&nbsp&nbsp&nbspThe major objectives of this security examination included:	
+		<ul>
+			<li>Developed trust with children, provided assistance to teachers and engaging students in learning activities and positive behaviors to optimize their understanding of lessons;</li>
+			<li>Designed and led educational games and group activities;</li>
+			<li>Gained experience assisting students with a range of disabilities and learning differences, especially Down syndrome;</li>
+		</ul>
+	</p>
+	 
+	</div>
+
+
+	<h3>METHODOLOGY</h3>
+	<div>
+		<span class="subpoint">Teaching Assistant</span>
+		<span class="italic">E-Plus Education,</span><span class="info"> Shanghai, China</span>
+		<span class="time">July 2018-Aug. 2018</span>
+		<ul>
+			<li>Developed trust with children, provided assistance to teachers and engaging students in learning activities and positive behaviors to optimize their understanding of lessons;</li>
+			<li>Designed and led educational games and group activities;</li>
+			<li>Gained experience assisting students with a range of disabilities and learning differences, especially Down syndrome;</li>
+		</ul>
+	</div>
+	
+	<div>
+		<span class="subpoint">Copy Editor</span>
+		<span class="italic">Ningbo TV Station,</span><span class="info"> Ningbo, China</span>
+		<span class="time">June 2017-Aug. 2017</span>
+		<ul>
+			<li>Edited, rewrote, and proofread over 50 news reports for Ningbo TV Station to ensure quality communication and information;</li>
+			<li>Conducted interviews with 23 singing competition participants and  published reports on NBTV's website and Wechat platform;</li>
+		</ul>
+	</div>
+
+	<h3>ABSTRACT</h3>
+	<div>
+		<p class="subpoint"> 
+			&nbsp&nbsp&nbsp&nbspBetween November 30 and December 3, a security examination that consisted of web application focused assessment  of the calm-sea-43952 heroku application has been performed. calm-sea-43952 is a server-side web application developed using Heroku, Node.js and the Express framework. It stores the submitted player information of the game, 2048, from any sources in Mongo database and returns corresponding data when requested.
+
+			<br><br>&nbsp&nbsp&nbsp&nbspThe major objectives of this security examination included:	
+		<ul>
+			<li>Developed trust with children, provided assistance to teachers and engaging students in learning activities and positive behaviors to optimize their understanding of lessons;</li>
+			<li>Designed and led educational games and group activities;</li>
+			<li>Gained experience assisting students with a range of disabilities and learning differences, especially Down syndrome;</li>
+		</ul>
+	</p>
+	 
+	</div>
+
+	<h3>ISSUES FOUND</h3>
+	<div>
+		<span class="subpoint">A. NoSQL Injection</span>
+		<span class="italic">&nbsp&nbspat index.js: 48-49</span>
+
+		<ul>
+			<li>Severity: HIGH
+			    <p>Injection can lead to unexpected modification of communication between components. Misinterpretation and loss of data can occur when unauthorized commands are executed.</p>
+			</li>
+			<li>Issue Description
+			    <p>This application allows untrusted data to be sent to the interpreter due to its improper encoding or escaping of input and output. The issue is found by looking for parameterization of queries that avoids the malicious input of query operators and modifiers.</p>
+			    <img src="injection/codescreenshot.png" alt="code"/>
+			    <p>In the above codes, the username attribute is assigned the value of the unprocessed input <span class="cf">query (query = {username: name};)</span>, and any query operators that have been inserted as a part of the query string will be inherited into the <span class=
+			    cf">collection.find(query)</span> function. </p>
+			</li>
+			<li>Proof of Vulnerability
+				<p>The syntax of the GET /scores.json route can be easily exploited by the insertion of query operators. Below is a sample attack that induces the webpage to display unintended outcomes.
+				</p>
+				<ol>
+					<li>Display of all history of play<br><br><img src="injection/normalgetpage.png" alt="getpage"/></li>
+					<li> Insertion of the [$gt] operator lead to the generation of<span class="cf">{"username": {"$gt": n}}</span> query object, whose value contains all usernames with a value larger than n. Empty JSON string is returned due to the lack of results of findings.<br><br><img src="injection/username[$gt=n.png" alt="getpage"/>
+					</li>
+				</ol>
+			</li>
+			<li>Issue Remediation
+				<p>Query parameterization by using mongo-sanitize to filter out input keys that starts with $:
+					<xmp>var sanitize = require(‘mongo-sanitize’);
+name = sanitize(req.query.username);</xmp>
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<div>
+		<span class="subpoint">B.Reflected Cross-site Scripting (XSS)</span>
+		<span class="italic">&nbsp&nbspat index.js: 70-84</span>
+
+		<ul>
+			<li>Severity: MEDIUM
+			    <p>Reflected XSS allows users to supply malicious content that is processed by the browser and later reflected to the user. Once the reflected XSS is conducted, the application will enable dangerous activities that bypass security mechanisms such as displaying undesirable contents and the transfer of private information.</p>
+			</li>
+			<li>Issue Description
+			    <p>In this application, the malicious data can be copied from a request and then echoed in the immediate response. The lack of proper input validation in the source code helped identify this issue. Without sufficient input validation, altered control flow and arbitrary code execution may occur.</p>
+			    <img src="xss/codescreenshot.png" alt="code"/>
+			    <p>In the above codes, the usernameItem variable is assigned an unprocessed value from the request body and is inserted into the database. The unverified input can be reflected through the GET / route, resulting in display of malicious content.</p>
+			</li>
+			<li>Proof of Vulnerability
+				<p>The POST /submit route allows potential reflected XSS, such as the following sample attack, to be conducted. 
+
+				</p>
+				<ol>
+					<li>Embed an html login form in the posted data<br><br><img src="xss/logincommand.png" alt="getpage"/></li>
+					<li> The username is displayed as an HTML login form when a GET request is made. The value of username can also be in other non-text form such as audio/visual material depending on the input.<br><br><img src="xss/homepagewithloginbox.png" alt="getpage"/>
+					</li>
+				</ol>
+			</li>
+			<li>Issue Remediation
+				<p>Use input validation functions to reject, or sanitize inputs that do not conform to the application’s expectation:
+					<xmp>   function sanitize(string) {
+  	const map = {'&': '&amp;','<': '&lt;','>': '&gt;','"': '&quot;',"'": '&#x27;',"/": '&#x2F;',};
+  	const reg = /[&<>"'/]/ig;
+  	return string.replace(reg, (match)=>(map[match]));
+}
+
+				</xmp>
+				</p>
+			</li>
+		</ul>
+	</div>
+
+		<div>
+		<span class="subpoint">C. Cross-Site Request Forgery (CSRF)</span>
+		<span class="italic">&nbsp&nbspat index.js: 40-47</span>
+
+		<ul>
+			<li>Severity: MEDIUM
+			    <p>Cross-Site Request Forgery trick the web servers into treating any requests sent by the clients as authentic, which allows unintentional request to be processed, leading to data breach and other unintended executions. </p>
+			</li>
+			<li>Issue Description
+			    <p>CSRF is made possible in this application via XSS due to its lack of proper input and output validation. The application itself does not intend to collect user information that will be sent to other servers, but the XSS vulnerabilities might be exploited to allow the attacker to trick the application into sending unintended requests. </p>
+			    <img src="CORF/codescreenshot.png" alt="code"/>
+			    <p>Apart from the lack of input validation, the lack of proper encodings of output displayed via the GET / route may also expose the application to CSRF. In the above codes, the username, score and created_at attributes of the returned results of the sort function will be returned in their unprocessed forms which may contain malicious contents and scripts. </p>
+			</li>
+			<li>Proof of Vulnerability
+				<p>After a HTML login form has been inserted as a username and displayed via the GET/ route, users may be tricked into submitting login information to the attacker’s server as below:
+				</p>
+				<ol>
+					<li>After the login button is clicked upon, a GET request to my 2048 server is made with the user’s username and password appended to the request path.	<br><br><img src="CORF/get.png" alt="getrequest"/></li>
+					<li> Using <span class="cf"> heroku logs –tail </span>command for my own heroku app, the username and passwords are revealed in the request histories.<br><br><img src="CORF/logs.png" alt="herokulogs"/>
+					</li>
+				</ol>
+			</li>
+			<li>Issue Remediation
+				<p>·	For this application’s very specific issue, CSRF can be avoided by sanitization of user inputs and proper encodings of outputs.</p>
+				<p>Other general CSRF prevention methods such as token based mitigation to generate a unique CSRF token using secure random number generator for each user session:
+     			<xmp>
+   	<form action="/postto.js" method="post">
+   	<input type="hidden" name="CSRFToken" value="OWY4NmQwODE4ODRjN2Q2NTlhMmZlYWEwYzU1YWQwMTVhM2JmNGYxYjJiMGI4MjJjZDE1ZDZMGYwMGEwOA==">
+	...
+   	</form>
+
+				</xmp>
+				</span>
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<h3>CONCLUSION</h3>
+	<div>
+		<div class="skill">Proficient with <span class="underline">Photoshop</span>, <span class="underline">MS Word</span>, <span class="underline">Excel</span>, <span class="underline">PowerPoint</span>, <span class="underline">InDesign</span>, <span class="underline">typesetting system Latex</span>;</div>
+		<div class="skill">Programming Languages: <span class="underline"> C++</span>, <span class="underline">Python</span>;</div>
+		<div class="skill">Proficient speaker of <span class="underline">Mandarin</span>; </div>
+		<div class="skill">Upper-intermediate user of <span class="underline">German</span>;</div>
+	</div>
+
+	<h3>REFERENCES</h3>
+	<div>
+		<div class="skill">Proficient with <span class="underline">Photoshop</span>, <span class="underline">MS Word</span>, <span class="underline">Excel</span>, <span class="underline">PowerPoint</span>, <span class="underline">InDesign</span>, <span class="underline">typesetting system Latex</span>;</div>
+		<div class="skill">Programming Languages: <span class="underline"> C++</span>, <span class="underline">Python</span>;</div>
+		<div class="skill">Proficient speaker of <span class="underline">Mandarin</span>; </div>
+		<div class="skill">Upper-intermediate user of <span class="underline">German</span>;</div>
+	</div>
+
+</body>
+</html>
+
+    
